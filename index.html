@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typing Timer Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #timer {
+            font-size: 24px;
+        }
+        #textbox {
+            width: 600px;
+            height: 100px;
+        }
+				#control{
+	  		    display: flex;        /* Enable flexbox */
+    		    justify-content: center; /* Center vertically */
+    		    align-items: center; /* Center horizontally (if needed) */
+				}
+				.control-element{
+								margin: 4px;
+				}
+
+    </style>
+</head>
+<body>
+				<div id="control">
+								<span class="control-element">time left:</span>
+				    <span class="control-element" id="timer">10</span>
+						<button class="control-element" id="reset">Reset</button>
+						<span>time bonus:</span>
+						<input type="text" id="timeBonus" class="control-element"
+						placeholder="3">
+				</div>
+		<hr/>
+    <textarea id="textbox"></textarea>
+
+    <script>
+				const initialTime = 10;
+				let timeBonus = 3;
+				let timeLeft = initialTime;
+				let timerId;
+				let lastWordCount = 0;
+				const timerElement = document.getElementById('timer');
+				const textboxElement = document.getElementById('textbox');
+				const timeBonusElement = document.getElementById('timeBonus');
+				
+				function updateTimer() {
+				    timerElement.textContent = timeLeft;
+				    if (timeLeft === 0) {
+				        clearInterval(timerId);
+				        alert("Time's up!");
+				        textboxElement.disabled = true;
+				    }
+				}
+				
+				function resetTimer() {
+				    clearInterval(timerId);
+				    timeLeft = initialTime;
+				    timerId = setInterval(() => {
+				        timeLeft--;
+				        updateTimer();
+				    }, 1000);
+				}
+				
+				textboxElement.addEventListener('input', () => {
+				    const words = textboxElement.value.trim().split(/\s+/);
+				    if (words.length !== lastWordCount && words[words.length - 1] !== '') {
+				        timeLeft += timeBonus;
+				        lastWordCount = words.length;
+				    }
+				    updateTimer();
+				});
+
+				// Start the timer
+				document.getElementById('reset').addEventListener('click', resetTimer);
+
+				// update time bonus value
+				timeBonusElement.addEventListener('input', () => {
+				    timeBonus = parseInt(timeBonusElement.value);
+				});
+    </script>
+
+</body>
+</html>
+
